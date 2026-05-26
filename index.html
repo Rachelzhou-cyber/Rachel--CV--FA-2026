@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周蕊 | 个人简历与深度作品集 V3</title>
+    <style>
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --color-primary: #3182ce;
+            --color-secondary: #dd6b20;
+            --color-border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--color-primary); text-decoration: none; transition: var(--transition); }
+        a:hover { color: var(--color-secondary); }
+
+        .app-container { display: flex; min-height: 100vh; position: relative; }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--color-border);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .profile-block { text-align: center; margin-bottom: 2.5rem; }
+
+        .avatar-container {
+            width: 110px; height: 110px;
+            margin: 0 auto 1.2rem;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .avatar-placeholder { width: 50px; height: 50px; fill: #a0aec0; transition: var(--transition); z-index: 1; }
+
+        .avatar-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            position: absolute; top: 0; left: 0;
+            opacity: 0;
+            z-index: 2;
+            transition: opacity 0.5s ease;
+        }
+
+        .profile-name { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.3rem; }
+        .profile-title { font-size: 0.85rem; color: var(--color-primary); font-weight: 600; letter-spacing: 0.5px; }
+
+        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+        .nav-item {
+            display: flex; align-items: center;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover { color: var(--color-primary); background-color: var(--bg-primary); transform: translateX(4px); }
+
+        .nav-item.active {
+            color: #ffffff;
+            background-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        }
+
+        .main-content { flex: 1; margin-left: 280px; padding: 3rem 4rem; max-width: 1100px; transition: var(--transition); }
+
+        .tab-panel { display: none; opacity: 0; transform: translateY(15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .tab-panel.active { display: block; opacity: 1; transform: translateY(0); }
+
+        .section-title {
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 2rem;
+            position: relative; padding-bottom: 0.5rem; color: var(--text-main);
+        }
+        .section-title::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 40px; height: 4px;
+            background-color: var(--color-secondary); border-radius: 2px;
+        }
+
+        .card {
+            background-color: var(--bg-card); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm); border: 1px solid var(--color-border); transition: var(--transition);
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+        .hero-section { display: flex; flex-direction: column; justify-content: center; min-height: 65vh; }
+
+        .hero-tag {
+            display: inline-block;
+            background-color: rgba(221, 107, 32, 0.1); color: var(--color-secondary);
+            padding: 0.4rem 1rem; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 1.2rem; align-self: flex-start;
+        }
+
+        .hero-statement { font-size: 2.2rem; font-weight: 800; margin-bottom: 1.5rem; line-height: 1.3; letter-spacing: -0.5px; }
+        .hero-statement mark {
+            background: linear-gradient(120deg, rgba(221, 107, 32, 0.15) 0%, rgba(221, 107, 32, 0.2) 100%);
+            color: var(--color-secondary); padding: 0 0.4rem; border-radius: 4px;
+        }
+
+        .hero-intro {
+            font-size: 1.15rem; color: var(--text-muted); margin-top: 1rem; text-align: justify;
+            border-left: 3px solid var(--color-border); padding-left: 1.2rem;
+        }
+
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+        .contact-item { background: var(--bg-card); padding: 1rem 1.2rem; border-radius: 8px; border-left: 3px solid var(--color-primary); font-size: 0.9rem; box-shadow: var(--shadow-sm); }
+
+        .timeline-item { position: relative; padding-left: 2rem; border-left: 2px solid var(--color-border); margin-bottom: 2rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -6px; top: 6px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background-color: var(--color-primary); border: 2px solid var(--bg-card);
+        }
+
+        .timeline-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
+        .company-name { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+        .job-title { font-size: 0.95rem; color: var(--color-primary); font-weight: 600; background: rgba(49, 130, 206, 0.08); padding: 0.2rem 0.6rem; border-radius: 4px; }
+        .timeline-date { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+        .sub-project { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed var(--color-border); }
+        .sub-project-title { font-size: 1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .sub-project-title::before { content: "▪"; color: var(--color-secondary); }
+
+        .bullet-list { list-style: none; padding-left: 0.5rem; }
+        .bullet-list li { position: relative; padding-left: 1.2rem; margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--text-main); text-align: justify; }
+        .bullet-list li::before { content: "•"; position: absolute; left: 0; color: var(--text-muted); }
+
+        .edu-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .edu-header { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 0.5rem; }
+        .edu-school { font-size: 1.15rem; font-weight: 700; }
+        .edu-meta { color: var(--text-muted); font-size: 0.95rem; }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+
+        .portfolio-card { display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: relative; overflow: hidden; }
+        .portfolio-card.highlight-card { border-top: 4px solid var(--color-secondary); background: linear-gradient(to bottom, #ffffff, #fffaf4); }
+
+        .portfolio-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-secondary); font-weight: 700; margin-bottom: 0.5rem; }
+        .portfolio-tag.primary-tag { color: var(--color-primary); }
+
+        .portfolio-title-text { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.8rem; line-height: 1.4; }
+        .portfolio-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; text-align: justify; }
+
+        .portfolio-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background-color: rgba(49, 130, 206, 0.08); color: var(--color-primary);
+            padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;
+            border: 1px solid transparent; transition: var(--transition); margin-top: auto;
+        }
+        .portfolio-card:hover .portfolio-btn { background-color: var(--color-primary); color: #ffffff; box-shadow: 0 4px 10px rgba(49, 130, 206, 0.2); }
+        .portfolio-card.highlight-card:hover .portfolio-btn { background-color: var(--color-secondary); color: #ffffff; box-shadow: 0 4px 10px rgba(221, 107, 32, 0.2); }
+
+        .skills-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .skill-tag-group { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+        .skill-tag { background-color: var(--bg-primary); color: var(--text-main); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; border: 1px solid var(--color-border); transition: var(--transition); }
+        .skill-tag:hover { border-color: var(--color-primary); background-color: rgba(49, 130, 206, 0.03); color: var(--color-primary); }
+
+        .progress-block { margin-top: 1rem; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.3rem; font-weight: 500; }
+        .progress-bar-bg { background-color: var(--color-border); height: 6px; border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); border-radius: 3px; width: 0; transition: width 1s cubic-bezier(0.1, 0.8, 0.2, 1); }
+
+        .mobile-header { display: none; background-color: var(--bg-card); border-bottom: 1px solid var(--color-border); padding: 1rem; position: fixed; top: 0; left: 0; right: 0; z-index: 110; justify-content: space-between; align-items: center; }
+        .menu-toggle { background: none; border: none; font-size: 1.5rem; color: var(--text-main); cursor: pointer; }
+
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(-100%); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 5.5rem 1.5rem 2rem; }
+            .mobile-header { display: flex; }
+            .hero-statement { font-size: 1.7rem; }
+            .timeline-header { flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+            .timeline-date { align-self: flex-start; margin-top: 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-header">
+        <div style="font-weight:700; color:var(--text-main);">周蕊 Rui - Portfolio</div>
+        <button class="menu-toggle" id="menuToggleBtn" aria-label="Toggle Menu">☰</button>
+    </div>
+
+    <div class="app-container">
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="profile-block">
+                <div class="avatar-container">
+                    <svg class="avatar-placeholder" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    <img id="avatar" class="avatar-img" alt="周蕊的头像">
+                </div>
+                <h1 class="profile-name">周蕊</h1>
+                <p class="profile-title">AI / 科技 / 新新能源行业研究 & FA</p>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-tab="home">首页简介</li>
+                    <li class="nav-item" data-tab="experience">工作/项目经历</li>
+                    <li class="nav-item" data-tab="portfolio">深度作品集</li>
+                    <li class="nav-item" data-tab="education">教育背景</li>
+                    <li class="nav-item" data-tab="skills">专业技能</li>
+                    <li class="nav-item" data-tab="honors">证书/荣誉</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+
+            <section id="home" class="tab-panel active">
+                <div class="hero-section">
+                    <span class="hero-tag">求职意向：行业研究 / 战略分析 / 早期投资 (FA)</span>
+                    <h2 class="hero-statement">
+                        穿透创始人的<span style="color:var(--color-primary);">技术黑话</span>，<br>
+                        榨取其背后的<mark>商业估值空间</mark>，<br>
+                        并用投资人听得懂的语言卖出去。
+                    </h2>
+                    <p class="hero-intro">
+                        长期关注 <strong>AI、科技及新能源领域</strong>创业与人才流动趋势，具备国际化战略研究、经营分析及行业 Mapping 经验。拥有北美及英国科技人才实战经验和生态资源，具备跨区域资源协同与行业研究能力，支持高层战略与业务决策。擅长基于数据与商业洞察形成判断，具备项目包装、PPT/Report Narrative 构建及跨组织推动能力。
+                    </p>
+
+                    <div class="contact-grid">
+                        <div class="contact-item">📱 <strong>国内电话:</strong> (86) 13628521592</div>
+                        <div class="contact-item">🇬🇧 <strong>英国电话:</strong> (44) 7881729787</div>
+                        <div class="contact-item">✉️ <strong>邮箱:</strong> ruizhouapply@163.com</div>
+                        <div class="contact-item">💬 <strong>微信:</strong> Rui 13628521592</div>
+                        <div class="contact-item" style="grid-column: 1 / -1; background-color: rgba(49, 130, 206, 0.05);">
+                            ⏰ <strong>时差提示:</strong> 英国伦敦与国内存在时差，建议北京时间 <strong>14:00 之后</strong> 方便电话联系。
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="experience" class="tab-panel">
+                <h2 class="section-title">履历与项目实战</h2>
+                
+                <div class="card timeline-item">
+                    <div class="timeline-header">
+                        <div>
+                            <span class="company-name">京东</span>
+                            <span class="job-title">京东全球技术校园招聘负责人</span>
+                        </div>
+                        <span class="timeline-date">2025年11月 - 2026年05月 | 伦敦</span>
+                    </div>
+                    
+                    <div class="sub-project">
+                        <h4 class="sub-project-title">AI与web3 战略研究与分析</h4>
+                        <ul class="bullet-list">
+                            <li>负责 AI 人才战略研究与市场分析，聚焦多模态与 AI Agent 两类核心技术路径，覆盖美国、英国、中国三地市场，输出跨区域人才供需对比分析汇报（3国×2技术方向矩阵分析）。</li>
+                            <li>负责 Web3 与新型计算范式方向的人才战略研究与市场分析，围绕 ATA 与 ATO 供应链数字化重构、链上基础设施、Oracle 与 AI × Web3 融合四大核心技术方向，开展结构化技术路径与人才供需分析。</li>
+                            <li>基于"国家-公司-岗位人才"四层结构模型，整合 100+ 公司样本、500+ 岗位样本与 500+ 人才样本，开展结构化供需拆解分析，用于识别不同技术方向的人才分布特征与结构性缺口并输出优先级排序依据，结果影响美国区域千万级美刀资源配置决策。</li>
+                        </ul>
+                    </div>
+
+                    <div class="sub-project">
+                        <h4 class="sub-project-title">AI生态人才mapping与交付</h4>
+                        <ul class="bullet-list">
+                            <li>负责京东国际业务海外技术人才获取与 Mapping，构建覆盖 500+ AI 岗位的人才样本库，并按 10+ 技术方向（LLM、多模态、搜推系统、NLP、AI Infra、AI Agent、因果分析等）建立结构化 mapping。累计招聘交付 AI 方向 20+，Web3 方向 3+。</li>
+                        </ul>
+                    </div>
+
+                    <div class="sub-project">
+                        <h4 class="sub-project-title">头部国际合作</h4>
+                        <ul class="bullet-list">
+                            <li>推动国际高校深度合作，包括剑桥大学、牛津大学、帝国理工学院及代尔夫特理工大学，建立博士、研究人员及毕业生的人才引入渠道，用于补充高端技术岗位供给。</li>
+                        </ul>
+                    </div>
+
+                    <div class="sub-project">
+                        <h4 class="sub-project-title">AI项目落地</h4>
+                        <ul class="bullet-list">
+                            <li>作为英国区域唯一代表，协助孵化 Workday AI 全球项目并协助海外落地；负责 AI 项目需求拆解与结构化分析，输出 AI 能力边界定义与 Agent 角色定义，并搭建对应的 AI 执行与协作框架，用于支持项目落地与业务对齐。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card timeline-item">
+                    <div class="timeline-header">
+                        <div>
+                            <span class="company-name">伦敦新能源组织</span>
+                            <span class="job-title">投资与战略合作助理</span>
+                        </div>
+                        <span class="timeline-date">2025年08月 - 至今 | 伦敦</span>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <ul class="bullet-list">
+                            <li><strong>海外国际市场开发对接：</strong>组织伦敦地区可持续能源行业活动及产业交流，对接 100+ 企业与机构代表（如 PwC、GIG、BP、施罗德资本、BYD、明阳储能、小章鱼能源），建立高质量行业网络，获取一手市场与项目机会信息，为潜在投资方向筛选及行业研判提供支持。</li>
+                            <li><strong>投融资项目管理与商务执行：</strong>负责 6 场大型行业活动的商务合作、资源协调及项目落地执行，统筹 300+ 人规模活动运作流程，推动产业方、金融机构及投资主体高效对接，提升潜在项目合作转化效率。</li>
+                            <li><strong>行业研究与投资信息搜集：</strong>通过 LinkedIn 主动搜寻可持续能源领域企业及潜在合作项目，跟踪行业公司动态、融资信息及市场参与方，持续整理企业与关键联系人信息，支持公司进行行业观察、市场分析及潜在投资机会识别。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card timeline-item">
+                    <div class="timeline-header">
+                        <div>
+                            <span class="company-name">中国石油化销售股份有限公司</span>
+                            <span class="job-title">项目管理（投标交付）实习生 / 合规管理</span>
+                        </div>
+                        <span class="timeline-date">2023年11月 - 2024年06月 | 中国</span>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <ul class="bullet-list">
+                            <li><strong>合规管理：</strong>主导千万级预算项目合规与内控体系建设，建立覆盖预算申请、审批、执行与复核的端到端治理框架与 KCP。实现 20+ 项目审批流程 100% 标准化与线上化，提升流程可追溯性与合规稳定性。</li>
+                            <li><strong>投标评审与风险控制：</strong>参与 20+ 项目标书评审，构建"合规性、可行性、成本合理性、执行风险"四维评审框架，完成 20+ 标书关键条款与交付节点审核。建立风险清单机制，覆盖成本结构、交付路径与资源配置等维度，提升评审效率与风险识别能力。</li>
+                            <li><strong>预算控制：</strong>构建覆盖 20+ 项目、价值总计千万的多项目预算与成本模型，实现预算编制、执行跟踪与滚动预测闭环管理。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="portfolio" class="tab-panel">
+                <h2 class="section-title">行研与 FA 深度作品集</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                    穿透技术黑话，重构商业叙事。以下为我在前沿科技、跨境人才供应链及企业估值空间领域的深度研究与白皮书沉淀：
+                </p>
+                
+                <div class="portfolio-grid">
+                    <div class="card portfolio-card highlight-card">
+                        <div>
+                            <div class="portfolio-tag">FA 核心方法论 & 投资叙事</div>
+                            <h3 class="portfolio-title-text">AI去中心化供应链的未来——打破硬科技项目创始人的技术壁垒（技术黑话），将其转化为具备"高壁垒、清晰成长曲线与健康财务天花板"的商业故事</h3>
+                            <p class="portfolio-desc">
+                                用投资机构与有限合伙人（LP）听得懂的语言，重构 Narrative 并在高壁垒赛道实现资本转化。
+                            </p>
+                        </div>
+                        <a href="https://northern-oriole-78e.notion.site/AI-36cd53d723c48026b773f6e1cffa0a52?pvs=73" target="_blank" class="portfolio-btn">
+                            阅读全文 &nbsp;➔
+                        </a>
+                    </div>
+
+                    <div class="card portfolio-card">
+                        <div>
+                            <div class="portfolio-tag primary-tag">前沿科技行业研究</div>
+                            <h3 class="portfolio-title-text">AI Agent 与多模态技术路径探索</h3>
+                            <p class="portfolio-desc">
+                                聚焦 AI Agent 核心演进路径，深度剖析垂直技术演进、商业化落地边界及产业生态人才供需模型。沉淀在跨国区域市场（中美英）中不同颗粒度技术方向下的人才画像和分布缺口特征。
+                            </p>
+                        </div>
+                        <a href="https://northern-oriole-78e.notion.site/AI-Agent-36cd53d723c480d5b5ddf2a75802fde1" target="_blank" class="portfolio-btn">
+                            阅读全文 &nbsp;➔
+                        </a>
+                    </div>
+
+                    <div class="card portfolio-card">
+                        <div>
+                            <div class="portfolio-tag primary-tag">出海战略 / 交付合规</div>
+                            <h3 class="portfolio-title-text">Global Talent Supply Chain: Strategic Playbook for Overseas Recruitment</h3>
+                            <p class="portfolio-desc">
+                                面向技术企业海外交付的系统性战略白皮书。围绕供应链重构中的海外招聘、国家-公司-人才四层建模、区域资源配置、属地化合规运营（Localization & Compliance）以及顶级国际科研高校协同机制构建。
+                            </p>
+                        </div>
+                        <a href="https://northern-oriole-78e.notion.site/Global-Talent-Supply-Chain-Strategic-Playbook-for-Overseas-Recruitment-Localization-Compliance-36cd53d723c4807d9062f89747ebe9bc" target="_blank" class="portfolio-btn">
+                            阅读全文 &nbsp;➔
+                        </a>
+                    </div>
+
+                    <div class="card portfolio-card">
+                        <div>
+                            <div class="portfolio-tag primary-tag">新能源 / 可持续发展研究</div>
+                            <h3 class="portfolio-title-text">浙东港口 ICCUS 一体化生态集群：把"碳减排成本"重构为沿海循环经济利润引擎</h3>
+                            <p class="portfolio-desc">
+                                未来最值钱的，不是减碳技术，而是把碳流重新组织成现金流的能力。围绕可持续能源领域的投融资逻辑、产业生态图谱与跨境市场机会，结合英国与中国市场的一手资源网络，探索能源转型中的结构性投资价值与资本叙事路径。
+                            </p>
+                        </div>
+                        <a href="https://northern-oriole-78e.notion.site/36cd53d723c48026b773f6e1cffa0a52?pvs=74" target="_blank" class="portfolio-btn">
+                            阅读全文 &nbsp;➔
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <section id="education" class="tab-panel">
+                <h2 class="section-title">教育经历</h2>
+                
+                <div class="edu-grid">
+                    <div class="card">
+                        <div class="edu-header">
+                            <span class="edu-school">伦敦大学学院 (UCL)</span>
+                            <span class="timeline-date">2024年09月 - 2026年01月</span>
+                        </div>
+                        <div class="edu-meta" style="font-weight: 600; color: var(--color-primary); margin-bottom: 0.5rem;">
+                            公共管理硕士 · 巴特莱特建筑学院
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 0.5rem;">
+                            <li><strong>学衔声誉：</strong>QS 全球综合排名第 9，巴特莱特建筑学院常年位居 QS 全球学科排名第 1。</li>
+                            <li><strong>学业成就：</strong>荣获<strong>一等荣誉学位 (First Class Honours)</strong>。</li>
+                            <li><strong>导师背景：</strong>导师为环境估值领域全球引用量第一的顶尖学者。<a href="https://www.robertcostanza.com/" target="_blank" style="font-size:0.85rem; margin-left:0.4rem; color:var(--color-primary); font-weight:600;">🔗 导师主页</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="edu-header">
+                            <span class="edu-school">宁波诺丁汉大学</span>
+                            <span class="timeline-date">2019年09月 - 2023年11月</span>
+                        </div>
+                        <div class="edu-meta" style="font-weight: 600; color: var(--color-primary); margin-bottom: 0.5rem;">
+                            国际事务与国际关系（西班牙语）本科
+                        </div>
+                        <ul class="bullet-list" style="margin-top: 0.5rem;">
+                            <li><strong>学业成就：</strong>以<strong>二等一荣誉学位 (Upper Second-Class Honours)</strong> 毕业。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="skills" class="tab-panel">
+                <h2 class="section-title">专业技能 & 语言素养</h2>
+                
+                <div class="skills-container">
+                    <div class="card">
+                        <h3 style="font-size:1.1rem; border-bottom:2px solid var(--bg-primary); padding-bottom:0.5rem;">
+                            💡 核心专业能力
+                        </h3>
+                        <div class="skill-tag-group">
+                            <span class="skill-tag">AI & Web3 前沿追踪</span>
+                            <span class="skill-tag">行业研究与分析 (Mapping)</span>
+                            <span class="skill-tag">投融资项目管理</span>
+                            <span class="skill-tag">商用报告 Narrative 构建</span>
+                            <span class="skill-tag">风险控制与内控体系</span>
+                            <span class="skill-tag">跨组织推动与协同</span>
+                        </div>
+
+                        <h3 style="font-size:1.1rem; border-bottom:2px solid var(--bg-primary); padding-bottom:0.5rem; margin-top:2rem;">
+                            💻 数字化工具
+                        </h3>
+                        <div class="skill-tag-group">
+                            <span class="skill-tag">PPT 汇报与项目包装</span>
+                            <span class="skill-tag">SQL 数据提取</span>
+                            <span class="skill-tag">Excel 动态表 / VBA</span>
+                            <span class="skill-tag">数据可视化</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size:1.1rem; border-bottom:2px solid var(--bg-primary); padding-bottom:0.5rem;">
+                            🗣️ 语言能力 & 工作作风
+                        </h3>
+                        
+                        <div class="progress-block">
+                            <div class="progress-label"><span>英语 (精通 / 海外实战经验)</span><span>95%</span></div>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" data-percent="95%"></div></div>
+                        </div>
+
+                        <div class="progress-block" style="margin-top: 1.5rem;">
+                            <div class="progress-label"><span>西班牙语 (精通)</span><span>90%</span></div>
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" data-percent="90%"></div></div>
+                        </div>
+
+                        <div style="margin-top: 2rem; background: var(--bg-primary); padding: 1rem; border-radius: 8px;">
+                            <p style="font-size: 0.9rem; color: var(--text-main);">
+                                🎯 <strong>工作性格标签：</strong><br>
+                                始终坚持<strong>结果导向</strong>，具备极强的自驱力，能够在复杂的跨国与跨组织环境中通过严谨的数据与商业洞察推进核心决策与资本转化。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="honors" class="tab-panel">
+                <h2 class="section-title">荣誉证书 & 学术认可</h2>
+                <div class="card" style="display: grid; gap: 1rem;">
+                    <div style="display:flex; align-items:center; gap:1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--bg-primary);">
+                        <span style="font-size:2rem;">🎓</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.05rem;">UCL 公共管理硕士一等荣誉学位</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">Master of Public Administration - First Class Honours</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--bg-primary);">
+                        <span style="font-size:2rem;">🌟</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.05rem;">宁波诺丁汉大学二等一荣誉学位</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">Bachelor's Degree - Upper Second-Class Honours</p>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem; padding: 0.5rem 0;">
+                        <span style="font-size:2rem;">💼</span>
+                        <div>
+                            <strong style="color:var(--text-main); font-size:1.05rem;">京东千万级美刀资源配置决策中枢团队认证</strong>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">基于"国家-公司-岗位"结构化供需拆解研究的商业实战成果认可</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            const sidebar = document.getElementById('sidebar');
+
+            function switchTab(tabId) {
+                navItems.forEach(item => {
+                    item.getAttribute('data-tab') === tabId ? item.classList.add('active') : item.classList.remove('active');
+                });
+                tabPanels.forEach(panel => {
+                    if (panel.id === tabId) {
+                        panel.classList.add('active');
+                        if (tabId === 'skills') animateProgressBars();
+                    } else {
+                        panel.classList.remove('active');
+                    }
+                });
+            }
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    switchTab(item.getAttribute('data-tab'));
+                    if (window.innerWidth <= 992) sidebar.classList.remove('open');
+                });
+            });
+
+            const menuToggleBtn = document.getElementById('menuToggleBtn');
+            if (menuToggleBtn) {
+                menuToggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('open');
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 992 && !sidebar.contains(e.target) && e.target !== menuToggleBtn) {
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            function animateProgressBars() {
+                document.querySelectorAll('.progress-bar-fill').forEach(fill => {
+                    fill.style.width = fill.getAttribute('data-percent');
+                });
+            }
+
+            // 优雅处理头像加载：如果有有效的 Base64 替换这里的空字符串，没有的话则保留默认占位图
+            function loadAvatar() {
+                const avatarImg = document.getElementById('avatar');
+                const base64Str = ''; // 在这里粘贴你完整的 Base64 字符串
+                if (base64Str) {
+                    avatarImg.src = base64Str;
+                    avatarImg.style.opacity = 1;
+                }
+            }
+
+            loadAvatar();
+        });
+    </script>
+</body>
+</html>
